@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interplanetary Weather — Earth & Mars</title>
+
+    <!-- Google Fonts: Space Grotesk & Inter for a sleek sci-fi look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Background decorative glows (will be styled in CSS) -->
+    <div class="space-bg"></div>
+
+    <div class="app-container">
+      <!-- ================= 1. HEADER ================= -->
+      <header class="app-header">
+        <div class="logo-area">
+          <span class="planet-badge earth-badge">🌍 Earth</span>
+          <span class="cross-badge">✕</span>
+          <span class="planet-badge mars-badge">🚀 Mars</span>
+          <h1>Interplanetary Weather</h1>
+        </div>
+        <p class="subtitle">
+          Live real-time telemetry from Earth (OpenWeather) & Mars Gale Crater
+          (NASA)
+        </p>
+
+        <!-- Unit Switcher Button (°C / °F) -->
+        <div class="controls-area">
+          <button
+            id="unit-toggle-btn"
+            class="btn-toggle"
+            aria-label="Toggle Temperature Units"
+          >
+            Switch to <span id="toggle-unit-label">°F</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- ================= 2. SEARCH & ALERT SECTION ================= -->
+      <section class="search-section">
+        <form id="search-form" class="search-form">
+          <input
+            type="text"
+            id="city-input"
+            placeholder="Enter an Earth city (e.g. London, Tokyo, Delhi)..."
+            autocomplete="off"
+            required
+          />
+          <button type="submit" id="search-btn" class="btn-primary">
+            Search Earth
+          </button>
+        </form>
+
+        <!-- Quick Search Chips -->
+        <div class="quick-cities">
+          <span class="quick-label">Popular:</span>
+          <button type="button" class="chip-btn" data-city="New Delhi">
+            New Delhi
+          </button>
+          <button type="button" class="chip-btn" data-city="London">
+            London
+          </button>
+          <button type="button" class="chip-btn" data-city="Tokyo">
+            Tokyo
+          </button>
+          <button type="button" class="chip-btn" data-city="New York">
+            New York
+          </button>
+        </div>
+
+        <!-- Error / Feedback Alert Box (Hidden by default, shown by JS on error) -->
+        <div id="error-banner" class="error-banner hidden" role="alert">
+          <span class="error-icon">⚠️</span>
+          <span id="error-message"
+            >City not found. Please verify the spelling.</span
+          >
+          <button
+            type="button"
+            id="close-error-btn"
+            class="btn-close-error"
+            aria-label="Dismiss error"
+          >
+            &times;
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= 3. WEATHER DASHBOARD (EARTH & MARS) ================= -->
+      <main class="dashboard-grid">
+        <!-- === EARTH WEATHER CARD === -->
+        <article class="weather-card earth-card" id="earth-card">
+          <div class="card-header">
+            <div class="planet-tag">🌍 Planet Earth</div>
+            <span class="live-dot" title="Live OpenWeather Stream"></span>
+          </div>
+
+          <div class="card-body">
+            <div class="location-info">
+              <h2 id="earth-city">New Delhi</h2>
+              <span id="earth-country" class="country-tag">IN</span>
+            </div>
+
+            <div class="temp-hero">
+              <img
+                id="earth-icon"
+                src="https://openweathermap.org/img/wn/01d@2x.png"
+                alt="Weather condition icon"
+              />
+              <div class="temp-display">
+                <span id="earth-temp" class="temp-number">28</span>
+                <span class="temp-unit">°C</span>
+              </div>
+            </div>
+
+            <p id="earth-condition" class="weather-condition">Clear Sky</p>
+            <p class="feels-like">
+              Feels like <span id="earth-feels-like">29</span
+              ><span class="temp-unit">°C</span>
+            </p>
+
+            <!-- Earth Details Grid -->
+            <div class="details-grid">
+              <div class="detail-item">
+                <span class="detail-label">💧 Humidity</span>
+                <span id="earth-humidity" class="detail-value">55%</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">💨 Wind Speed</span>
+                <span id="earth-wind" class="detail-value">3.6 m/s</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">🧭 Pressure</span>
+                <span id="earth-pressure" class="detail-value">1012 hPa</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">👁️ Visibility</span>
+                <span id="earth-visibility" class="detail-value">10 km</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Last Updated Timestamp (Required by prompt) -->
+          <div class="card-footer">
+            <span class="timestamp-label">🕒 Last Updated:</span>
+            <span id="earth-timestamp" class="timestamp-value">Loading...</span>
+          </div>
+        </article>
+
+        <!-- === MARS WEATHER CARD === -->
+        <article class="weather-card mars-card" id="mars-card">
+          <div class="card-header">
+            <div class="planet-tag">🔴 Planet Mars</div>
+            <span class="rover-tag">Curiosity Rover (NASA)</span>
+          </div>
+
+          <div class="card-body">
+            <div class="location-info">
+              <h2>Gale Crater</h2>
+              <span class="country-tag mars-tag"
+                >Sol <span id="mars-sol">---</span></span
+              >
+            </div>
+
+            <div class="temp-hero">
+              <div class="mars-symbol">🪐</div>
+              <div class="temp-display">
+                <span id="mars-temp-high" class="temp-number">-12</span>
+                <span class="temp-unit">°C</span>
+              </div>
+            </div>
+
+            <p id="mars-condition" class="weather-condition">Sunny & Clear</p>
+            <p class="feels-like">
+              Earth Date: <span id="mars-terrestrial-date">YYYY-MM-DD</span>
+            </p>
+
+            <!-- Mars Details Grid -->
+            <div class="details-grid">
+              <div class="detail-item">
+                <span class="detail-label">❄️ Min Air Temp</span>
+                <span id="mars-temp-low" class="detail-value">-76°C</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">🔥 Max Air Temp</span>
+                <span id="mars-temp-max" class="detail-value">-12°C</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">🌪️ Atm. Pressure</span>
+                <span id="mars-pressure" class="detail-value">750 Pa</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">☀️ UV Irradiance</span>
+                <span id="mars-uv" class="detail-value">Very High</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mars Mission Timestamp -->
+          <div class="card-footer">
+            <span class="timestamp-label">📡 Telemetry Source:</span>
+            <span class="timestamp-value">NASA MSL Science Team</span>
+          </div>
+        </article>
+      </main>
+
+      <!-- ================= 4. INTERPLANETARY COMPARISON TABLE ================= -->
+      <section class="comparison-section">
+        <h3>Interplanetary Atmosphere Comparison</h3>
+        <div class="table-container">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>🌍 Earth (Current City)</th>
+                <th>🔴 Mars (Gale Crater)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Primary Atmosphere</td>
+                <td>78% Nitrogen, 21% Oxygen</td>
+                <td>95.3% Carbon Dioxide</td>
+              </tr>
+              <tr>
+                <td>Surface Pressure</td>
+                <td>~1,013 hPa (Thick)</td>
+                <td>~7.5 hPa (Ultra-thin, &lt;1% Earth)</td>
+              </tr>
+              <tr>
+                <td>Average Temperature</td>
+                <td>+15 °C</td>
+                <td>-63 °C</td>
+              </tr>
+              <tr>
+                <td>Day Length</td>
+                <td>24 Hours</td>
+                <td>24 Hours, 39 Minutes (1 Sol)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= 5. FOOTER & API CITATIONS ================= -->
+      <footer class="app-footer">
+        <p>
+          Academic Minor Project —
+          <strong>Interplanetary Weather Application</strong>
+        </p>
+        <div class="api-references">
+          <span>Data Sources:</span>
+          <a
+            href="https://openweathermap.org/current"
+            target="_blank"
+            rel="noopener noreferrer"
+            >OpenWeatherMap API</a
+          >
+          <span>&bull;</span>
+          <a
+            href="https://mars.nasa.gov/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >NASA Mars Science Laboratory (REMS)</a
+          >
+          <span>&bull;</span>
+          <a
+            href="https://api.nasa.gov/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >NASA Open APIs</a
+          >
+        </div>
+      </footer>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script src="config.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
